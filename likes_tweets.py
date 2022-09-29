@@ -141,7 +141,7 @@ def save_img(tweet_json, save_dir) -> bool:
             
             if os.path.isfile(filepath):
                 ret = True
-                print("reached the already exists.")
+                print("already exists.")
                 print("    --> " + "\"" + filepath + "\"")
             else:
                 ret = False            
