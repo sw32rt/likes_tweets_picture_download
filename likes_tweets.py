@@ -14,7 +14,7 @@ with open(tokenfile) as f:
     token_dict = json.load(f)
     
 bearer_token = token_dict["BEARER_TOKEN"]
-max_results = 5
+max_results = 20
 
 def get_userid_by_username(username:str) -> str:
     if "USER_ID" not in token_dict:
