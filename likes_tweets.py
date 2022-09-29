@@ -141,15 +141,17 @@ def save_img(tweet_json, save_dir) -> bool:
             
             if os.path.isfile(filepath):
                 ret = True
+                print("reached the already exists.")
+                print("    --> " + "\"" + filepath + "\"")
             else:
-                ret = False
-            
-            try:
-                req.urlretrieve(url, filepath)
-            except Exception as e:
-                print(" !=== failed to save picture. ===!")
-            print("text: " + save_name)
-            print("    --> url: " + url)
+                ret = False            
+                try:
+                    req.urlretrieve(url, filepath)
+                except Exception as e:
+                    print(" !=== failed to save picture. ===!")
+                print("text: " + save_name)
+                print("    --> url: " + url)
+
     except Exception as e:
         ret = False
         assert 0
@@ -158,8 +160,6 @@ def save_img(tweet_json, save_dir) -> bool:
         save = {"next_token": ""}
         with open(savefile, "w+") as f:
             json.dump(save, f, indent=4)
-        print("reached the already exists.")
-        print("    --> " + "\"" + filepath + "\"")
 
     return ret
 
