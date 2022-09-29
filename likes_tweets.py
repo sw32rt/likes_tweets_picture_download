@@ -2,7 +2,6 @@ import requests
 import os
 import json
 import urllib.request as req
-import json
 
 tokenfile = "token.json"
 savefile = "save.json"
@@ -46,6 +45,11 @@ def create_url():
     # possibly_sensitive, promoted_metrics, public_metrics, referenced_tweets,
     # source, text, and withheld
     # tweet_fields = "media.fields=url"
+    
+    if not os.path.isfile(savefile):
+        save = {"next_token": ""}
+        with open(savefile, "w+") as f:
+            json.dump(save, f, indent=4)
     
     with open(savefile) as f:
         save_data = json.load(f)
@@ -113,9 +117,10 @@ def save_img(tweet_json, save_dir) -> bool:
 
     try:
         for data in tweet_json["data"]:
-            for i, media_keys in enumerate(data["attachments"]["media_keys"]): 
-                media_key_dict[media_keys] = data["author_id"]
-                media_key_text_dict[media_keys] = data["text"].replace("https://", "") + "-" + str(i)
+            if "attachments" in data:             
+                for i, media_keys in enumerate(data["attachments"]["media_keys"]): 
+                    media_key_dict[media_keys] = data["author_id"]
+                    media_key_text_dict[media_keys] = data["text"].replace("https://", "") + "-" + str(i)
         
         userid_dict = {}
         for user in tweet_json["includes"]["users"]:
@@ -152,6 +157,7 @@ def save_img(tweet_json, save_dir) -> bool:
             print("    --> url: " + url)
     except Exception as e:
         ret = False
+        assert 0
 
     return ret
 
@@ -160,7 +166,7 @@ def main():
     while  not isDone:
         url, tweet_fields = create_url()
         json_response = connect_to_endpoint(url, tweet_fields)
-        print(json.dumps(json_response, indent=4, sort_keys=True))
+        # print(json.dumps(json_response, indent=4, sort_keys=True))
         isDone = save_img(json_response, "./downloads/")
 
 if __name__ == "__main__":
