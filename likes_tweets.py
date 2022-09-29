@@ -164,12 +164,21 @@ def save_img(tweet_json, save_dir) -> bool:
     return ret
 
 def main():
+    settingsfile = "settings.json"
+    if os.path.isfile(settingsfile):
+        with open(settingsfile) as f:
+            settings_dict = json.load(f)
+        if "DOWNLOAD_DIR" in settings_dict:
+            download_dir = settings_dict["DOWNLOAD_DIR"]
+        else:
+            download_dir = "./downloads/"
+    
     isDone = False
     while  not isDone:
         url, tweet_fields = create_url()
         json_response = connect_to_endpoint(url, tweet_fields)
         # print(json.dumps(json_response, indent=4, sort_keys=True))
-        isDone = save_img(json_response, "./downloads/")
+        isDone = save_img(json_response, download_dir)
 
 if __name__ == "__main__":
     main()
