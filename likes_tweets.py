@@ -136,8 +136,11 @@ def save_img(tweet_json, save_dir) -> bool:
         for tweet in tweet_json["includes"]["media"]:
             save_name:str = media_key_username_dict[tweet["media_key"]] + " " + media_key_text_dict[tweet["media_key"]]
             save_name = save_name.replace("\r\n", " ").replace("\r", " ").replace("\n", " ").replace("\\", "_").replace("/", "_").replace(":", "：").replace("*", "＊").replace("?", "？").replace("\"", "_").replace("<", "＜").replace(">", "＞").replace("|", "｜")
+            url_hash = save_name[-17:]
+            save_name = save_name[:-17]
+            save_name = save_name[:70]
             url = tweet["url"]
-            filepath = save_dir + save_name + url[-4:]
+            filepath = save_dir + save_name + url_hash + url[-4:]
             
             if os.path.isfile(filepath):
                 ret = True
